@@ -37,4 +37,23 @@ class ApplicationController < ActionController::Base
     render({ :template => "calculation_templates/random_results.html.erb"})
   end 
 
+
+  #payment number controls
+  def blank_payment_form
+    render({ :template => "calculation_templates/payment_form.html.erb"})
+  end 
+
+  def calculate_payment
+    @APR = params.fetch("user_apr").to_f
+    @years = params.fetch("user_years").to_i
+    @principal = params.fetch("user_pv").to_f
+    @r = @APR/12*0.01
+    @n = @years*12
+    @upper_chunk = @r*((1+@r)**@n)
+    @bottom_chunk = ((1+@r)**@n)-1
+    @payment = @principal * @upper_chunk/@bottom_chunk
+    render({ :template => "calculation_templates/payment_results.html.erb"})
+  end 
+
 end
+
